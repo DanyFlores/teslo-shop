@@ -10,6 +10,7 @@ import { UnitOfWork } from 'src/common/UnitOfWork/UnitOfWork';
 @Module({
   controllers: [ProductsController],
   providers: [ProductsService,ProductsRepository,UnitOfWork],
-  imports:[TypeOrmModule.forFeature([Products,ProductImage])]
+  imports:[TypeOrmModule.forFeature([Products,ProductImage])],
+  exports:[ProductsService]
 })
 export class ProductsModule {}

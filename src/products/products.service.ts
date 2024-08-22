@@ -27,7 +27,7 @@ export class ProductsService implements IProductService {
 
       const queryRunner = await this._UnitOfWork.BeginTransaction();
       await this.repository.initialize(queryRunner);
-      var product = await this.repository.create(createProductDto);
+      var product = await this.repository.createTst(createProductDto);
 
       await queryRunner.manager.save(product);
 

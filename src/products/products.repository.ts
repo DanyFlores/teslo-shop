@@ -33,7 +33,20 @@ export class ProductsRepository {
             });
             return product;
         } catch (error) {
-            //   this.handleExceptions(error)
+              console.log("error->",error)
+        }
+    }
+    async createTst(createProductDto: CreateProductDto): Promise<Products> {
+        try {
+            const { images, ...productDetail } = createProductDto;           
+            const product =  this._queryRunner.manager.create(Products, {
+                ...productDetail,
+                images: await this.saveImageTst(images)
+            });
+           
+            return product;
+        } catch (error) {
+              console.log("error->",error)
         }
     }
     async update(id: string, updateProductDto: UpdateProductDto): Promise<Products> {
@@ -53,7 +66,7 @@ export class ProductsRepository {
     async UpdateImagesByProduct(id: string, images: string[]): Promise<ProductImage[]> {
         await this._queryRunner.manager.delete(ProductImage, { product: { id: id } });
         var prodImages = images.map(
-            image => this.saveImage(image)
+           image => this.saveImage(image)
         );
         return prodImages;
     }
@@ -71,6 +84,27 @@ export class ProductsRepository {
       }
     
     saveImage(image: string) {
-        return this._queryRunner.manager.create(ProductImage, { url: image })
+        try {
+            return this._queryRunner.manager.create(ProductImage, { url: image });
+        } catch (error) {
+              console.log("error->",error)
+        }
+    }
+    async saveImageTst(images: string[]){
+        try {
+            let array:ProductImage[]=[];
+            images.map(async(image) =>{
+                 array.push(this._queryRunner.manager.create(ProductImage, { url: image}));
+            })
+            return await Promise.all(array).then(res=>{
+                return res
+            });            
+        } catch (error) {
+              console.log("error->",error)
+        }
+    }
+
+    async DeleteAll(){
+        return await this._queryRunner.manager.query('DELETE FROM "products"');
     }
 }
